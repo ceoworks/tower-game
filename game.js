@@ -54,7 +54,7 @@ module.exports = function game(setup, done) {
 			return done(result);
 		}
 		if (result.impossible === true) {
-			result.message = 'Impossible to win the game, because 2+ enemies comes to tower simultaneously';
+			result.message = 'Impossible to win the game, because 2+ enemies came to tower simultaneously';
 			return done(result);
 		}
 		setup.isImpossible = isImpossible;

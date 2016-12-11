@@ -40,7 +40,7 @@ describe('when testing game', function () {
 			should.exist(this.result.turns);
 		});
 	});
-	describe.only('with tricky setup', function () {
+	describe('with tricky setup', function () {
 		before(function (done) {
 			var self = this;
 			game(setups.tricky, function (result) {
@@ -51,6 +51,20 @@ describe('when testing game', function () {
 		it('should complete game and return correct format', function () {
 			should.equal(this.result.win, true);
 			should.equal(this.result.turns, 5);
+		});
+	});
+	describe('with impossible setup', function () {
+		before(function (done) {
+			var self = this;
+			game(setups.impossible, function (result) {
+				self.result = result;
+				done();
+			});
+		});
+		it('should complete game and return correct format', function () {
+			should.equal(this.result.win, false);
+			should.equal(this.result.turns, 2);
+			should.equal(this.result.message, 'Impossible to win the game, because 2+ enemies came to tower simultaneously');
 		});
 	});
 });
