@@ -29,6 +29,16 @@ module.exports.random = {
 		{distance: chance.integer(chanceOpts), speed: chance.integer(chanceOpts)}
 	]
 };
+module.exports.tricky = {
+	fireRange: 50,
+	enemies: [
+		{distance: 100, speed: 20},
+		{distance: 30, speed: 10},
+		{distance: 40, speed: 20},
+		{distance: 51, speed: 50},
+		{distance: 220, speed: 60}
+	]
+};
 module.exports.impossible = {
 	fireRange: 50,
 	enemies: [

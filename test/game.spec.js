@@ -40,4 +40,17 @@ describe('when testing game', function () {
 			should.exist(this.result.turns);
 		});
 	});
+	describe.only('with tricky setup', function () {
+		before(function (done) {
+			var self = this;
+			game(setups.tricky, function (result) {
+				self.result = result;
+				done();
+			});
+		});
+		it('should complete game and return correct format', function () {
+			should.equal(this.result.win, true);
+			should.equal(this.result.turns, 5);
+		});
+	});
 });

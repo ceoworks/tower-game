@@ -5,11 +5,9 @@ function nextTurn(done) {
 	this.turns++;
 	this.enemies = _.sortBy(this.enemies, [sortByLowestTurnsToTower, 'distance']);
 	this.impossible = this.isImpossible && this.isImpossible(this.enemies[0], this.enemies[1]);
-	if (this.enemies[0].distance <= this.fireRange) {
-		this.killedEnemy = this.enemies.shift();
-		console.log('Turn %d: Kill %s at %d', this.turns, 'Bot', this.killedEnemy.distance);
+	if (tryKillEnemy.call(this) !== true) {
+		console.log('Turn %d: Pass, targets are out of range', this.turns);
 	}
-
 	if (this.enemies.length === 0) {
 		console.log('You win in %d turns', this.turns);
 		return done({win: true, turns: this.turns});
@@ -26,11 +24,22 @@ function nextTurn(done) {
 		}
 	}
 }
+function tryKillEnemy(index) {
+	index = index || 0;
+	if (this.enemies[index].distance <= this.fireRange) {
+		this.killedEnemy = this.enemies.splice(index, 1).shift();
+		console.log('Turn %d: Kill %s at %d', this.turns, 'Bot', this.killedEnemy.distance);
+		return true;
+	} else if (index < this.enemies.length) {
+		return tryKillEnemy.call(this, ++index);
+	}
+	return false;
+}
 function sortByLowestTurnsToTower(enemy) {
 	return enemy.distance / enemy.speed;
 }
 function isImpossible(first, second) {
-	return (first.distance - first.speed) <= 0 && (second.distance - second.speed) <= 0;
+	return first && second && (first.distance - first.speed) <= 0 && (second.distance - second.speed) <= 0;
 }
 
 module.exports = function game(setup, done) {
