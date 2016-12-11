@@ -1,12 +1,13 @@
-var _ = require('lodash');
-
 function nextTurn(done) {
-	console.log('THIS:', this);
+	var self = this;
 	this.turns++;
-	this.enemies = _.orderBy(this.enemies, ['distance', 'speed'], ['asc', 'desc']);
+	this.enemies = this.enemies.sort(function (a, b) {
+		return (a.distance - a.speed) - (b.distance - b.speed);
+	});
 	if (this.enemies[0].distance <= this.fireRange) {
 		console.log('Killed:', this.enemies.shift());
 	}
+
 	if (this.enemies.length === 0) {
 		console.log('Won at turn ', this.turns);
 		return done(null, {win: true, turns: this.turns});
@@ -27,7 +28,7 @@ function nextTurn(done) {
 module.exports = function game(setup, done) {
 	setup.turns = 0;
 	var step = 1;
-	setInterval(nextTurn.bind(setup, done), step);
+	return setInterval(nextTurn.bind(setup, done), step);
 };
 
 
