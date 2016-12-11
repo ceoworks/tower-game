@@ -3,16 +3,18 @@ var game = require('../game');
 var setups = require('./setups');
 
 describe('when testing game', function () {
-	before(function (done) {
-		var self = this;
-		game(setups.positive, function (result) {
-			self.result = result;
-			done();
+	describe('with simple positive setup', function () {
+		before(function (done) {
+			var self = this;
+			game(setups.positive, function (result) {
+				self.result = result;
+				done();
+			});
 		});
-	});
-	it('should win game at 5 turns', function () {
-		should.equal(this.result.win, true);
-		should.equal(this.result.turns, 5);
+		it('should win game at 5 turns', function () {
+			should.equal(this.result.win, true);
+			should.equal(this.result.turns, 5);
+		});
 	});
 	describe('with hard positive setup', function () {
 		before(function (done) {
@@ -51,6 +53,19 @@ describe('when testing game', function () {
 		it('should complete game and return correct format', function () {
 			should.equal(this.result.win, true);
 			should.equal(this.result.turns, 5);
+		});
+	});
+	describe('with negative setup', function () {
+		before(function (done) {
+			var self = this;
+			game(setups.negative, function (result) {
+				self.result = result;
+				done();
+			});
+		});
+		it('should complete game and return correct format', function () {
+			should.equal(this.result.win, true);
+			should.equal(this.result.turns, 4);
 		});
 	});
 	describe('with impossible setup', function () {

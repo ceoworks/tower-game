@@ -30,8 +30,8 @@ function tryKillEnemy(index) {
 		this.killedEnemy = this.enemies.splice(index, 1).shift();
 		console.log('Turn %d: Kill %s at %d', this.turns, 'Bot', this.killedEnemy.distance);
 		return true;
-	} else if (index < this.enemies.length) {
-		return tryKillEnemy.call(this, ++index);
+	} else if (++index < this.enemies.length) {
+		return tryKillEnemy.call(this, index);
 	}
 	return false;
 }

@@ -39,6 +39,14 @@ module.exports.tricky = {
 		{distance: 220, speed: 60}
 	]
 };
+module.exports.negative = {
+	fireRange: 50,
+	enemies: [
+		{distance: 51, speed: 50},
+		{distance: 100, speed: 50},
+		{distance: 220, speed: 60}
+	]
+};
 module.exports.impossible = {
 	fireRange: 50,
 	enemies: [
