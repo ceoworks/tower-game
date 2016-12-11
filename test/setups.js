@@ -11,7 +11,7 @@ module.exports.positive = {
 		{distance: 220, speed: 60}
 	]
 };
-module.exports.negative = {
+module.exports.hardPositive = {
 	fireRange: 50,
 	enemies: [
 		{distance: 100, speed: 50},
@@ -27,5 +27,14 @@ module.exports.random = {
 		{distance: chance.integer(chanceOpts), speed: chance.integer(chanceOpts)},
 		{distance: chance.integer(chanceOpts), speed: chance.integer(chanceOpts)},
 		{distance: chance.integer(chanceOpts), speed: chance.integer(chanceOpts)}
+	]
+};
+module.exports.impossible = {
+	fireRange: 50,
+	enemies: [
+		{distance: 100, speed: 50},
+		{distance: 60, speed: 30},
+		{distance: 40, speed: 20},
+		{distance: 220, speed: 60}
 	]
 };

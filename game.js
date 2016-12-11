@@ -1,16 +1,18 @@
+var _ = require('lodash');
+
 function nextTurn(done) {
 	var self = this;
 	this.turns++;
-	this.enemies = this.enemies.sort(function (a, b) {
-		return (a.distance - a.speed) - (b.distance - b.speed);
-	});
+	this.enemies = _.sortBy(this.enemies, [sortByLowestTurnsToTower, 'distance']);
+	this.impossible = this.isImpossible && this.isImpossible(this.enemies[0], this.enemies[1]);
 	if (this.enemies[0].distance <= this.fireRange) {
-		console.log('Killed:', this.enemies.shift());
+		this.killedEnemy = this.enemies.shift();
+		console.log('Turn %d: Kill %s at %d', this.turns, 'Bot', this.killedEnemy.distance);
 	}
 
 	if (this.enemies.length === 0) {
-		console.log('Won at turn ', this.turns);
-		return done(null, {win: true, turns: this.turns});
+		console.log('You win in %d turns', this.turns);
+		return done({win: true, turns: this.turns});
 	} else {
 		var min = 1;
 		this.enemies = this.enemies.map(function (enemy) {
@@ -19,16 +21,39 @@ function nextTurn(done) {
 			return enemy;
 		});
 		if (min <= 0) {
-			console.log('Loose:', this.enemies);
-			return done(null, {win: false, turns: this.turns});
+			console.log('You loose at %d turn', this.turns);
+			return done({win: false, turns: this.turns, impossible: this.impossible});
 		}
 	}
 }
+function sortByLowestTurnsToTower(enemy) {
+	return enemy.distance / enemy.speed;
+}
+function isImpossible(first, second) {
+	return (first.distance - first.speed) <= 0 && (second.distance - second.speed) <= 0;
+}
 
 module.exports = function game(setup, done) {
-	setup.turns = 0;
+	console.log('Firing range is %dm', setup.fireRange);
 	var step = 1;
-	return setInterval(nextTurn.bind(setup, done), step);
+	var originalEnemies = JSON.parse(JSON.stringify(setup.enemies));
+	setup.turns = 0;
+
+	var interval = setInterval(nextTurn.bind(setup, function checkResult(result) {
+		clearInterval(interval);
+		if (result.win === true) {
+			return done(result);
+		}
+		if (result.impossible === true) {
+			result.message = 'Impossible to win the game, because 2+ enemies comes to tower simultaneously';
+			return done(result);
+		}
+		setup.isImpossible = isImpossible;
+		setup.fireRange += 1;
+		setup.turns = 0;
+		setup.enemies = originalEnemies;
+		return game(setup, done);
+	}), step);
 };
 
 
